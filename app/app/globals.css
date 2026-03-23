@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fuentes personalizadas */
+  --font-headline: "var(--font-manrope)", sans-serif;
+  --font-body: "var(--font-inter)", sans-serif;
+
+  /* Colores de tu diseño original */
+  --color-surface: #0e0e0e;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #adaaaa;
+  --color-primary: #81ecff;
+  --color-secondary: #00d2ff;
+  --color-tertiary: #79acff;
+  --color-surface-container-highest: #262626;
+  --color-surface-container-low: #131313;
+  --color-outline-variant: #484847;
+  --color-on-primary-fixed: #003840;
+  --color-error: #ff716c;
+  --color-error-container: #9f0519;
+
+  /* Radios de borde (opcional si usas rounded-xl) */
+  --radius-default: 1rem;
+}
+
+/* Configuraciones base */
+:root {
+  --background: #0e0e0e; /* Forzamos el fondo oscuro de tu diseño */
+  --foreground: #ffffff;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  /* Usamos las variables de fuente que Next.js inyecta en el layout */
+  font-family: var(--font-inter), ui-sans-serif, system-ui;
+}

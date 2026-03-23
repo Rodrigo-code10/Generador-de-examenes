@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+
+  attempts  Attempt[]
+  createdAt DateTime @default(now())
+}
+
+model Question {
+  id           String   @id @default(uuid())
+  questionText String
+  topic        String
+
+  options      Option[]
+  attempts     AttemptQuestion[]
+  answers      Answer[]  
+
+  createdAt    DateTime @default(now())
+}
+
+model Option {
+  id          String   @id @default(uuid())
+  text        String
+  Correct     Boolean
+
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  answers     Answer[]  
+}
+
+model Attempt {
+  id        String   @id @default(uuid())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  topic     String   
+  status    AttemptStatus @default(IN_PROGRESS)
+  score     Float?
+
+  answers   Answer[]
+  questions AttemptQuestion[]
+
+  createdAt DateTime @default(now())
+}
+
+model AttemptQuestion {
+  id          String   @id @default(uuid())
+
+  attemptId   String
+  questionId  String
+
+  attempt     Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question    Question @relation(fields: [questionId], references: [id])
+
+  @@unique([attemptId, questionId])
+}
+
+model Answer {
+  id               String   @id @default(uuid())
+
+  attemptId        String
+  questionId       String
+  selectedOptionId String
+
+  Correct        Boolean
+
+  attempt          Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question         Question @relation(fields: [questionId], references: [id])
+  selectedOption   Option   @relation(fields: [selectedOptionId], references: [id])
+
+  createdAt        DateTime @default(now())
+}
